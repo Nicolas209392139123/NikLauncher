@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NikLauncher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--white:#ffffff;--gray:#686868;--dim:#363636;--border:#1a1a1a;--bg:#060608;--bg2:#0d0d10;--bg3:#111114}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#202020;border-radius:2px}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NEBULAS DE LUZ BLANCA FIJAS */
+.nebula{position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(100px);opacity:.065}
+.nebula-1{width:700px;height:700px;background:radial-gradient(circle,#fff 0%,transparent 70%);top:-150px;left:-200px;animation:nebDrift 18s ease-in-out infinite alternate}
+.nebula-2{width:550px;height:550px;background:radial-gradient(circle,#fff 0%,transparent 70%);bottom:-100px;right:-150px;animation:nebDrift 22s ease-in-out infinite alternate-reverse}
+.nebula-3{width:400px;height:400px;background:radial-gradient(circle,#fff 0%,transparent 70%);top:38%;left:52%;opacity:.035;animation:nebDrift 14s ease-in-out infinite alternate}
+@keyframes nebDrift{from{transform:translate(0,0)}to{transform:translate(30px,20px)}}
+
+/* MOON GLOW CLASES */
+.moon-glow{text-shadow:0 0 25px rgba(255,255,255,.95),0 0 70px rgba(255,255,255,.5),0 0 140px rgba(255,255,255,.2),0 0 260px rgba(255,255,255,.08);color:#fff}
+.moon-glow-md{text-shadow:0 0 18px rgba(255,255,255,.8),0 0 50px rgba(255,255,255,.3),0 0 100px rgba(255,255,255,.12);color:#fff}
+.moon-glow-sm{text-shadow:0 0 12px rgba(255,255,255,.55),0 0 35px rgba(255,255,255,.18);color:#f0f0f0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 72px;background:rgba(6,6,8,0.9);backdrop-filter:blur(28px);border-bottom:1px solid rgba(255,255,255,0.055)}
+.logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.logo-img-wrap{width:44px;height:44px;border-radius:11px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;background:#0f0f12;flex-shrink:0;box-shadow:0 0 20px rgba(255,255,255,0.07),0 0 0 1px rgba(255,255,255,0.03)}
+.logo-img-wrap img{width:100%;height:100%;object-fit:contain}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-size:1.12rem;font-weight:700;letter-spacing:-.01em;text-shadow:0 0 18px rgba(255,255,255,.65),0 0 45px rgba(255,255,255,.2);color:#fff}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{color:var(--gray);text-decoration:none;font-size:.8rem;letter-spacing:.04em;font-weight:500;transition:color .2s,text-shadow .2s}
+.nav-links a:hover{color:#fff;text-shadow:0 0 14px rgba(255,255,255,.6)}
+.nav-cta{background:#fff;color:#000!important;padding:9px 20px;border-radius:7px;font-weight:600!important;font-size:.78rem!important;letter-spacing:.03em;box-shadow:0 0 22px rgba(255,255,255,.2);transition:opacity .2s,box-shadow .2s!important; cursor: pointer;}
+.nav-cta:hover{opacity:.9;box-shadow:0 0 40px rgba(255,255,255,.35)!important;text-shadow:none!important}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:130px 20px 90px;text-align:center}
+
+.hero-logo-wrap{position:relative;margin:0 auto 28px;width:fit-content}
+.hero-logo-aura{position:absolute;inset:-30px;background:radial-gradient(circle,rgba(255,255,255,.13) 0%,transparent 65%);border-radius:50%;filter:blur(14px);animation:auraBreath 4s ease-in-out infinite}
+@keyframes auraBreath{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.hero-logo{width:106px;height:106px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:#0e0e11;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 45px rgba(255,255,255,.12),0 0 90px rgba(255,255,255,.05);position:relative;z-index:1}
+.hero-logo img{width:100%;height:100%;object-fit:contain}
+
+.hero-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.09);border-radius:100px;padding:5px 16px;font-size:.68rem;font-weight:500;letter-spacing:.12em;color:rgba(255,255,255,.35);margin-bottom:22px;text-transform:uppercase;background:rgba(255,255,255,.02)}
+.badge-dot{width:5px;height:5px;background:#fff;border-radius:50%;box-shadow:0 0 8px rgba(255,255,255,1),0 0 18px rgba(255,255,255,.6);animation:dotPulse 2.5s infinite}
+@keyframes dotPulse{0%,100%{opacity:.25;box-shadow:0 0 4px rgba(255,255,255,.5)}50%{opacity:1;box-shadow:0 0 12px rgba(255,255,255,1),0 0 24px rgba(255,255,255,.5)}}
+
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(3.2rem,9vw,7rem);font-weight:700;line-height:1.02;letter-spacing:-.06em;text-shadow:0 0 35px rgba(255,255,255,1),0 0 90px rgba(255,255,255,.55),0 0 180px rgba(255,255,255,.22),0 0 320px rgba(255,255,255,.08);color:#fff;margin-bottom:16px}
+.hero-sub{font-size:.88rem;font-weight:400;color:rgba(255,255,255,.3);letter-spacing:.01em;margin-bottom:34px;max-width:360px;line-height:1.7;text-shadow:0 0 20px rgba(255,255,255,.12)}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:26px}
+.btn-moon{background:#fff;color:#000;font-weight:600;font-size:.83rem;padding:12px 30px;border-radius:8px;border:none;cursor:pointer;letter-spacing:.02em;box-shadow:0 0 30px rgba(255,255,255,.32),0 0 70px rgba(255,255,255,.1);transition:box-shadow .3s,opacity .2s;text-decoration:none;display:inline-block}
+.btn-moon:hover{opacity:.9;box-shadow:0 0 55px rgba(255,255,255,.55),0 0 110px rgba(255,255,255,.18)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.35);font-weight:500;font-size:.83rem;padding:12px 30px;border-radius:8px;border:1px solid rgba(255,255,255,.07);cursor:pointer;letter-spacing:.02em;transition:color .2s,border-color .2s,text-shadow .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{color:#fff;border-color:rgba(255,255,255,.18);text-shadow:0 0 14px rgba(255,255,255,.5)}
+.hero-meta{font-size:.66rem;color:rgba(255,255,255,.13);letter-spacing:.1em;text-transform:uppercase}
+
+/* STATS */
+.stats-strip{position:relative;z-index:1;display:flex;justify-content:center;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+.stat-item{flex:1;max-width:240px;padding:30px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.05);transition:background .3s}
+.stat-item:last-child{border-right:none}
+.stat-item:hover{background:rgba(255,255,255,.018)}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:1.85rem;font-weight:700;letter-spacing:-.04em;margin-bottom:4px;text-shadow:0 0 22px rgba(255,255,255,.75),0 0 55px rgba(255,255,255,.25);color:#fff}
+.stat-label{font-size:.62rem;color:rgba(255,255,255,.22);letter-spacing:.1em;text-transform:uppercase}
+
+/* BASE */
+section{position:relative;z-index:1}
+.s-label{font-size:.63rem;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.s-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem,2.6vw,2rem);font-weight:700;letter-spacing:-.03em;margin-bottom:10px;text-shadow:0 0 22px rgba(255,255,255,.65),0 0 65px rgba(255,255,255,.2);color:#fff}
+.s-desc{color:rgba(255,255,255,.26);font-size:.82rem;line-height:1.72;max-width:360px}
+
+/* WORLD */
+.world-section{padding:96px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.world-inner{max-width:1080px;margin:0 auto;padding:0 72px;display:flex;align-items:center;gap:80px;flex-wrap:wrap}
+.world-text{flex:1;min-width:220px}
+.world-visual{flex:0 0 260px;display:flex;align-items:center;justify-content:center;position:relative}
+.planet-wrap{position:relative;width:230px;height:230px}
+.planet-aura{position:absolute;inset:-32px;background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 65%);border-radius:50%;filter:blur(16px);animation:auraBreath 5s ease-in-out infinite}
+.planet-svg{width:100%;height:100%;filter:drop-shadow(0 0 22px rgba(255,255,255,.16))}
+.continents-g{animation:rotateCont 40s linear infinite;transform-origin:100px 100px}
+@keyframes rotateCont{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.orbit-ring{position:absolute;top:50%;left:50%;width:280px;height:280px;transform:translate(-50%,-50%) rotateX(68deg);border:1px solid rgba(255,255,255,.08);border-radius:50%;box-shadow:0 0 14px rgba(255,255,255,.04);animation:orbitSpin 28s linear infinite}
+@keyframes orbitSpin{from{transform:translate(-50%,-50%) rotateX(68deg) rotate(0deg)}to{transform:translate(-50%,-50%) rotateX(68deg) rotate(360deg)}}
+
+/* RENDIMIENTO */
+.perf-section{padding:96px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.perf-inner{max-width:1080px;margin:0 auto;padding:0 72px}
+.perf-top{display:flex;align-items:flex-start;justify-content:space-between;gap:40px;margin-bottom:48px;flex-wrap:wrap}
+
+.bolt-icon{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bolt-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(255,255,255,.06)}
+.bolt-ring::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top:2px solid rgba(255,255,255,.95);border-right:2px solid rgba(255,255,255,.28);filter:drop-shadow(0 0 5px rgba(255,255,255,.85));animation:spinRing 1.8s linear infinite}
+@keyframes spinRing{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.bolt-ring svg{width:32px;height:32px;position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(255,255,255,.95)) drop-shadow(0 0 24px rgba(255,255,255,.4))}
+
+.metrics-list{display:flex;flex-direction:column;gap:0;flex:1;max-width:600px;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden}
+.metric-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);gap:16px;background:rgba(255,255,255,.01);transition:background .2s}
+.metric-row:last-child{border-bottom:none}
+.metric-row:hover{background:rgba(255,255,255,.04)}
+.metric-row-left{display:flex;align-items:center;gap:12px}
+.mrow-icon{width:26px;height:26px;display:grid;place-items:center;opacity:.28}
+.mrow-icon svg{width:14px;height:14px}
+.mrow-name{font-size:.82rem;font-weight:500;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.28)}
+.mrow-sub{font-size:.66rem;color:rgba(255,255,255,.18);margin-top:1px}
+.mrow-val{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:600;white-space:nowrap;letter-spacing:.02em;text-shadow:0 0 16px rgba(255,255,255,.75),0 0 36px rgba(255,255,255,.25);color:#fff}
+
+/* FEATURES */
+.feat-section{padding:96px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.feat-header{max-width:1080px;margin:0 auto;padding:0 72px;display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:40px;flex-wrap:wrap}
+.feat-grid{max-width:1080px;margin:0 auto;padding:0 72px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);border-radius:14px;overflow:hidden}
+.feat-card{background:var(--bg);padding:28px 24px;transition:background .25s}
+.feat-card:hover{background:rgba(255,255,255,.022)}
+.feat-card:hover .feat-card-icon{box-shadow:0 0 18px rgba(255,255,255,.1);border-color:rgba(255,255,255,.14)}
+.feat-card-icon{width:32px;height:32px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:16px;transition:border-color .2s,box-shadow .2s}
+.feat-card-icon svg{width:15px;height:15px;stroke:#fff;opacity:.45}
+.feat-card h3{font-family:'Space Grotesk',sans-serif;font-size:.87rem;font-weight:600;margin-bottom:7px;letter-spacing:-.01em;text-shadow:0 0 14px rgba(255,255,255,.45);color:#fff}
+.feat-card p{font-size:.73rem;color:rgba(255,255,255,.22);line-height:1.68}
+
+/* FREE */
+.free-section{padding:96px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.free-inner{max-width:1080px;margin:0 auto;padding:0 72px;display:flex;align-items:center;gap:80px;flex-wrap:wrap}
+.free-text{flex:1;min-width:220px}
+.free-tag{display:inline-block;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.07);padding:4px 11px;border-radius:4px;margin-bottom:14px}
+.free-text h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.04em;margin-bottom:10px;line-height:1.2;text-shadow:0 0 26px rgba(255,255,255,.7),0 0 65px rgba(255,255,255,.22);color:#fff}
+.free-text p{font-size:.8rem;color:rgba(255,255,255,.22);line-height:1.72;max-width:360px;margin-bottom:22px}
+.free-checks{display:flex;flex-direction:column;gap:8px}
+.free-check{display:flex;align-items:center;gap:9px;font-size:.76rem;color:rgba(255,255,255,.25)}
+.free-check::before{content:'';width:3px;height:3px;background:#fff;border-radius:50%;flex-shrink:0;box-shadow:0 0 7px rgba(255,255,255,.85)}
+.free-price-wrap{text-align:center}
+.free-price{font-family:'Space Grotesk',sans-serif;font-size:7rem;font-weight:700;color:#fff;line-height:1;letter-spacing:-.07em;text-shadow:0 0 35px rgba(255,255,255,1),0 0 90px rgba(255,255,255,.5),0 0 170px rgba(255,255,255,.18)}
+.free-forever{font-size:.62rem;color:rgba(255,255,255,.18);letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+
+/* HOW */
+.how-section{padding:96px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.how-inner{max-width:1080px;margin:0 auto;padding:0 72px}
+.how-header{margin-bottom:40px}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);border-radius:14px;overflow:hidden}
+.step-card{background:var(--bg);padding:28px 24px;transition:background .25s}
+.step-card:hover{background:rgba(255,255,255,.022)}
+.step-n{font-family:'Space Grotesk',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.14em;color:rgba(255,255,255,.16);text-transform:uppercase;margin-bottom:12px}
+.step-card h3{font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:600;margin-bottom:7px;letter-spacing:-.01em;text-shadow:0 0 14px rgba(255,255,255,.45);color:#fff}
+.step-card p{font-size:.73rem;color:rgba(255,255,255,.22);line-height:1.68}
+
+/* CTA */
+.cta-section{padding:130px 0;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.065) 0%,transparent 65%);border-radius:50%;filter:blur(50px);pointer-events:none}
+.cta-inner{max-width:1080px;margin:0 auto;padding:0 72px;text-align:center;position:relative}
+.cta-inner h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:700;letter-spacing:-.05em;margin-bottom:12px;text-shadow:0 0 32px rgba(255,255,255,1),0 0 85px rgba(255,255,255,.45),0 0 170px rgba(255,255,255,.15);color:#fff}
+.cta-inner p{font-size:.82rem;color:rgba(255,255,255,.26);margin-bottom:30px}
+.cta-meta{font-size:.62rem;color:rgba(255,255,255,.09);letter-spacing:.1em;text-transform:uppercase;margin-top:14px}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,.05);padding:28px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;z-index:1}
+.footer-left{display:flex;align-items:center;gap:10px}
+.footer-left img{width:22px;height:22px;object-fit:contain;border-radius:5px;opacity:.45;filter:brightness(3)}
+.footer-brand{font-family:'Space Grotesk',sans-serif;font-size:.77rem;font-weight:600;color:rgba(255,255,255,.18);text-shadow:0 0 10px rgba(255,255,255,.12)}
+.footer-copy{font-size:.65rem;color:rgba(255,255,255,.09)}
+.footer-links{display:flex;gap:18px}
+.footer-links a{font-size:.65rem;color:rgba(255,255,255,.13);text-decoration:none;transition:color .2s,text-shadow .2s}
+.footer-links a:hover{color:#fff;text-shadow:0 0 12px rgba(255,255,255,.55)}
+
+/* --- ESTILOS DE LA VENTANA EMERGENTE --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 6, 8, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.activo {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-content {
+  background: #0d0d10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 40px 30px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 51, 51, 0.05);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-overlay.activo .modal-content {
+  transform: scale(1) translateY(0);
+}
+.modal-title {
+  font-family: 'Space Grotesk', sans-serif;
+  color: #ff3333; /* Rojo llamativo */
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  text-shadow: 0 0 25px rgba(255, 51, 51, 0.7);
+}
+.modal-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+.modal-text strong {
+  color: #fff;
+}
+.modal-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+.btn-largo {
+  font-size: 0.78rem !important;
+  line-height: 1.4;
+  padding: 16px 20px;
+  white-space: normal;
+}
+
+@media(max-width:900px){nav{padding:14px 18px}.nav-links{display:none}.world-inner,.free-inner,.perf-inner,.feat-header,.how-inner,.cta-inner{padding:0 20px}.feat-grid,.steps-grid{grid-template-columns:1fr}.world-inner,.free-inner{flex-direction:column;gap:40px}.world-visual{width:100%;flex:auto}.perf-top{flex-direction:column}.stats-strip{flex-wrap:wrap}.stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.05);flex:0 0 50%}footer{padding:20px;flex-direction:column;text-align:center}.feat-header{padding:0 20px}}
+</style>
+</head>
+<body>
+
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<canvas id="stars"></canvas>
+
+<div id="modal-descarga" class="modal-overlay">
+  <div class="modal-content">
+    <h2 class="modal-title">¡ALERTA!</h2>
+    <div class="modal-text">
+      <p>Si el antivirus detecta un virus o spyware o lo que sea, es normal ya que es un falso positivo esto sucede debido a que el 100% de el launcher fue hecho en python y no tiene firma digital ya que no tengo suficiente presupuesto debes pagar como 300 dolares al año es una garcha.</p>
+      <br>
+      <p>La unica pagina para descargar este launcher es <strong>PON_TU_LINK_AQUI</strong> cualquier otra pagina es una copia y virus.</p>
+    </div>
+    <div class="modal-btns">
+      <button id="btn-aceptar" class="btn-moon btn-largo">Entiendo Todos los riesgos y acepto todo lo que dijo la ventana emergente</button>
+      <button id="btn-cancelar" class="btn-ghost">No Descargar</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-img-wrap">
+      <img src="LogoNikLauncher.png" alt="NikLauncher" onerror="this.style.display='none'"/>
+    </div>
+    <span class="logo-text">NikLauncher</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#rendimiento">Rendimiento</a></li>
+    <li><a href="#caracteristicas">Caracteristicas</a></li>
+    <li><a href="#como">Instalacion</a></li>
+    <li><a href="#descargar" class="nav-cta btn-trigger-descarga">Descargar</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-logo-wrap">
+    <div class="hero-logo-aura"></div>
+    <div class="hero-logo">
+      <img src="LogoNikLauncher.png" alt="NikLauncher" onerror="this.style.display='none'"/>
+    </div>
+  </div>
+  <div class="hero-badge"><span class="badge-dot"></span>Minecraft Launcher — Gratuito</div>
+  <h1>NikLauncher</h1>
+  <p class="hero-sub">El launcher de Minecraft mas optimizado de este momento. Sin premium, sin limites, sin costo.</p>
+  <div class="hero-btns">
+    <a href="#descargar" class="btn-moon btn-trigger-descarga">Descargar gratis</a>
+    <a href="#caracteristicas" class="btn-ghost">Ver todo</a>
+  </div>
+  <p class="hero-meta">100% gratuito &nbsp;·&nbsp; Sin registro &nbsp;·&nbsp; Sin anuncios</p>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Paises disponibles</div></div>
+  <div class="stat-item"><div class="stat-num">99.9%</div><div class="stat-label">Uptime</div></div>
+  <div class="stat-item"><div class="stat-num">$0</div><div class="stat-label">Para siempre</div></div>
+  <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Disponible</div></div>
+</div>
+
+<section class="world-section">
+  <div class="world-inner">
+    <div class="world-text">
+      <div class="s-label">Alcance global</div>
+      <div class="s-title">Disponible en todo el mundo</div>
+      <p class="s-desc">NikLauncher esta disponible para cualquier jugador, en cualquier pais, sin restricciones geograficas ni de version.</p>
+    </div>
+    <div class="world-visual">
+      <div class="planet-wrap">
+        <div class="planet-aura"></div>
+        <div class="orbit-ring"></div>
+        <svg class="planet-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="pc"><circle cx="100" cy="100" r="88"/></clipPath>
+            <radialGradient id="pg" cx="30%" cy="25%"><stop offset="0%" stop-color="#181818"/><stop offset="100%" stop-color="#060608"/></radialGradient>
+            <radialGradient id="shine" cx="25%" cy="20%"><stop offset="0%" stop-color="rgba(255,255,255,0.1)"/><stop offset="65%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="88" fill="url(#pg)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+          <g class="continents-g" clip-path="url(#pc)" fill="rgba(255,255,255,0.88)">
+            <path d="M36,50 L52,44 L68,49 L72,62 L64,76 L54,82 L44,79 L37,68 Z"/>
+            <path d="M52,82 L63,77 L71,86 L69,98 L60,103 L51,96 Z"/>
+            <path d="M58,108 L70,103 L81,113 L83,132 L76,150 L64,154 L54,141 L52,122 Z"/>
+            <path d="M92,47 L106,43 L115,48 L118,60 L110,68 L100,70 L91,64 Z"/>
+            <path d="M101,68 L112,65 L118,73 L113,79 L103,79 L97,74 Z"/>
+            <path d="M97,83 L114,79 L123,88 L125,109 L120,129 L108,135 L97,130 L91,112 L91,95 Z"/>
+            <path d="M117,47 L136,42 L154,49 L161,60 L158,72 L143,78 L126,76 L115,66 Z"/>
+            <path d="M137,76 L154,71 L163,80 L165,95 L155,101 L140,97 L131,88 Z"/>
+            <path d="M145,118 L161,113 L170,122 L168,136 L155,141 L144,134 L142,124 Z"/>
+            <path d="M72,32 L84,27 L91,34 L89,45 L78,48 L70,43 Z"/>
+            <path d="M157,67 L163,63 L167,69 L164,76 L158,75 Z"/>
+          </g>
+          <g clip-path="url(#pc)" stroke="rgba(255,255,255,0.05)" stroke-width="0.7" fill="none">
+            <ellipse cx="100" cy="100" rx="88" ry="27"/><ellipse cx="100" cy="100" rx="88" ry="56"/>
+            <line x1="12" y1="100" x2="188" y2="100"/>
+          </g>
+          <circle cx="100" cy="100" r="88" fill="url(#shine)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rendimiento" class="perf-section">
+  <div class="perf-inner">
+    <div class="perf-top">
+      <div>
+        <div class="s-label">Velocidad y estabilidad</div>
+        <div class="s-title">Rendimiento sin igual</div>
+        <p class="s-desc">Inicio rapido, carga optimizada y estabilidad garantizada para tu experiencia en Minecraft.</p>
+      </div>
+      <div class="bolt-icon">
+        <div class="bolt-ring">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-list">
+      <div class="metric-row"><div class="metric-row-left"><div class="mrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg></div><div><div class="mrow-name">Velocidad de inicio</div><div class="mrow-sub">Minecraft carga en segundos</div></div></div><div class="mrow-val">Lightning Fast</div></div>
+      <div class="metric-row"><div class="metric-row-left"><div class="mrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="mrow-name">Rendimiento general</div><div class="mrow-sub">Alto rendimiento constante</div></div></div><div class="mrow-val">99.9%</div></div>
+      <div class="metric-row"><div class="metric-row-left"><div class="mrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="mrow-name">Tiempo de respuesta</div><div class="mrow-sub">Latencia ultra-baja</div></div></div><div class="mrow-val">Fast</div></div>
+      <div class="metric-row"><div class="metric-row-left"><div class="mrow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="mrow-name">Confiabilidad</div><div class="mrow-sub">Estabilidad garantizada</div></div></div><div class="mrow-val">100%</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="caracteristicas" class="feat-section">
+  <div class="feat-header">
+    <div><div class="s-label">Caracteristicas</div><div class="s-title">Por que NikLauncher</div></div>
+    <p style="font-size:.76rem;color:rgba(255,255,255,.18);max-width:210px;line-height:1.65;text-align:right">Construido desde cero para ser el mejor launcher de Minecraft, gratis para siempre.</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg></div><h3>Inicio Ultra Rapido</h3><p>Abre Minecraft en segundos. Motor optimizado para cargar mas rapido que cualquier otro launcher.</p></div>
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Seguro y Confiable</h3><p>Sin archivos maliciosos. Arquitectura transparente y verificada para que juegues sin preocupaciones.</p></div>
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Interfaz Minimalista</h3><p>Diseno limpio y directo. Sin ruido visual. Encuentra todo donde lo esperas, sin curva de aprendizaje.</p></div>
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><h3>Uso Minimo de RAM</h3><p>Menos recursos del sistema. Mas memoria libre para que Minecraft corra a tope.</p></div>
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.01-6.66"/></svg></div><h3>Actualizacion Automatica</h3><p>Siempre en la version mas reciente. Las mejoras llegan solas sin interrumpir tu juego.</p></div>
+    <div class="feat-card"><div class="feat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div><h3>Siempre Disponible</h3><p>Infraestructura con 99.9% de uptime para que entres a jugar en cualquier momento.</p></div>
+  </div>
+</section>
+
+<section class="free-section">
+  <div class="free-inner">
+    <div class="free-text">
+      <div class="free-tag">Modelo de precios</div>
+      <h2>Gratis ahora.<br/>Gratis siempre.</h2>
+      <p>No existe version premium, no hay funciones bloqueadas, no hay suscripcion oculta. NikLauncher es completamente gratuito para todos.</p>
+      <div class="free-checks">
+        <div class="free-check">Todas las funciones desbloqueadas</div>
+        <div class="free-check">Sin anuncios ni rastreadores</div>
+        <div class="free-check">Actualizaciones incluidas para siempre</div>
+        <div class="free-check">Sin limite de cuentas o perfiles</div>
+      </div>
+    </div>
+    <div class="free-price-wrap">
+      <div class="free-price">$0</div>
+      <div class="free-forever">Para siempre</div>
+      <a href="#descargar" class="btn-moon btn-trigger-descarga" style="margin-top:22px;display:inline-block">Descargar ahora</a>
+    </div>
+  </div>
+</section>
+
+<section id="como" class="how-section">
+  <div class="how-inner">
+    <div class="how-header"><div class="s-label">Instalacion</div><div class="s-title">Listo en 3 pasos</div></div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-n">Paso 01</div><h3>Descarga</h3><p>Descarga el instalador directamente. Sin cuenta, sin registro, sin formularios.</p></div>
+      <div class="step-card"><div class="step-n">Paso 02</div><h3>Instala</h3><p>Instalacion rapida en menos de un minuto. Compatible con Windows 7, 10 y 11.</p></div>
+      <div class="step-card"><div class="step-n">Paso 03</div><h3>Juega</h3><p>Abre NikLauncher, selecciona tu version de Minecraft y entra al juego de inmediato.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="descargar" class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2>Empieza a jugar hoy</h2>
+    <p>El launcher mas optimizado de este momento, completamente gratis.</p>
+    <a href="#descargar" class="btn-moon btn-trigger-descarga" style="font-size:.88rem;padding:13px 40px">Descargar NikLauncher</a>
+    <p class="cta-meta">Sin tarjeta de credito &nbsp;·&nbsp; Sin registro &nbsp;·&nbsp; 100% gratuito</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <img src="LogoNikLauncher.png" alt="" onerror="this.style.display='none'"/>
+    <span class="footer-brand">NikLauncher</span>
+  </div>
+  <span class="footer-copy">El Launcher mas optimizado de este momento</span>
+  <div class="footer-links">
+    <a href="#">Inicio</a><a href="#caracteristicas">Caracteristicas</a><a href="#descargar" class="btn-trigger-descarga">Descargar</a>
+  </div>
+</footer>
+
+<script>
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');
+let W,H,stars=[],shooters=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+function init(){
+  stars=[];
+  for(let i=0;i<300;i++){
+    const t=Math.random();
+    const r = t<.70 ? Math.random()*.7+.1 : t<.92 ? Math.random()*1.3+.7 : Math.random()*2.4+1.6;
+    stars.push({x:Math.random()*W,y:Math.random()*H,r,bright:t>.92,a:Math.random()*.55+.08,sp:Math.random()*.003+.0004,ph:Math.random()*6.28});
+  }
+}
+function drawStar(s,t){
+  const pulse=0.38+0.62*Math.sin(t*s.sp+s.ph);
+  const a=s.a*pulse;
+  if(s.bright){
+    const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*10);
+    g.addColorStop(0,`rgba(255,255,255,${a*.95})`);
+    g.addColorStop(.25,`rgba(255,255,255,${a*.35})`);
+    g.addColorStop(.6,`rgba(255,255,255,${a*.08})`);
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r*10,0,6.28);
+    ctx.fillStyle=g;ctx.fill();
+  }
+  ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);
+  ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fill();
+}
+function spawnShooter(){
+  if(Math.random()>.007)return;
+  shooters.push({x:Math.random()*W*.65,y:Math.random()*H*.35,len:Math.random()*130+50,speed:Math.random()*7+4,a:1,angle:Math.PI/4+(Math.random()-.5)*.3});
+}
+function drawShooters(){
+  shooters=shooters.filter(s=>s.a>.02);
+  shooters.forEach(s=>{
+    const dx=Math.cos(s.angle)*s.len,dy=Math.sin(s.angle)*s.len;
+    const g=ctx.createLinearGradient(s.x,s.y,s.x-dx,s.y-dy);
+    g.addColorStop(0,`rgba(255,255,255,${s.a})`);
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-dx,s.y-dy);
+    ctx.strokeStyle=g;ctx.lineWidth=1.2;ctx.stroke();
+    s.x+=Math.cos(s.angle)*s.speed;s.y+=Math.sin(s.angle)*s.speed;s.a-=.016;
+  });
+}
+function loop(ts){
+  ctx.clearRect(0,0,W,H);
+  const t=ts*.001;
+  stars.forEach(s=>drawStar(s,t));
+  spawnShooter();drawShooters();
+  requestAnimationFrame(loop);
+}
+resize();init();loop(0);
+window.addEventListener('resize',()=>{resize();init()});
+
+// fade in scroll
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.style.opacity='1';x.target.style.transform='none'}}),{threshold:.06});
+document.querySelectorAll('.feat-card,.step-card,.metric-row,.stat-item,.world-text,.world-visual,.free-text,.free-price-wrap,.perf-top').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(14px)';
+  el.style.transition='opacity .55s ease,transform .55s ease';
+  obs.observe(el);
+});
+
+/* --- LOGICA DEL MODAL --- */
+const modal = document.getElementById('modal-descarga');
+const btnAceptar = document.getElementById('btn-aceptar');
+const btnCancelar = document.getElementById('btn-cancelar');
+const disparadores = document.querySelectorAll('.btn-trigger-descarga');
+
+// Abrir modal
+disparadores.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    modal.classList.add('activo');
+  });
+});
+
+// Botón cancelar
+btnCancelar.addEventListener('click', () => {
+  modal.classList.remove('activo');
+});
+
+// Botón aceptar (descarga real)
+btnAceptar.addEventListener('click', () => {
+  // REEMPLAZA ESTO CON TU LINK DE DESCARGA
+  window.location.href = "https://github.com/Nicolas209392139123/NikLauncher/releases/download/NikLauncher/NikLauncher.Windows.7z"; 
+  modal.classList.remove('activo');
+});
+
+// Cerrar al hacer clic fuera
+modal.addEventListener('click', (e) => {
+  if(e.target === modal) modal.classList.remove('activo');
+});
+</script>
+</body>
+</html>
